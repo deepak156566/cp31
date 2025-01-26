@@ -1,0 +1,52 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int main() {
+    ios::sync_with_stdio(0);
+    cin.tie(0);
+
+    int t;
+    cin >> t; // Number of test cases
+
+    while (t--) {
+        int n;
+        cin >> n; // Number of arrays
+        vector<int> mins;       // To store minimum values of each array
+        vector<int> second_mins; // To store second minimum values of each array
+        int global_min = INT_MAX;
+
+        for (int i = 0; i < n; i++) {
+            int size;
+            cin >> size;
+
+            vector<int> arr(size);
+            for (int j = 0; j < size; j++) {
+                cin >> arr[j];
+            }
+             
+            // Find the two smallest elements in the current array
+            int first_min = INT_MAX, second_min = INT_MAX;
+            for (int x : arr) {
+                if (x < first_min) {
+                    second_min = first_min;
+                    first_min = x;
+                } else if (x < second_min) {
+                    second_min = x;
+                }
+            }
+             
+            mins.push_back(first_min);
+            second_mins.push_back(second_min);
+            global_min = min(global_min, first_min); // Update global minimum
+        }
+
+        // Compute the result for the current test case
+        long long sum_second_mins = accumulate(second_mins.begin(), second_mins.end(), 0ll);
+        int min_of_second_mins = *min_element(second_mins.begin(), second_mins.end());
+        long long result = global_min + (sum_second_mins - min_of_second_mins);
+
+        cout << result << '\n';
+    }
+
+    return 0;
+}
