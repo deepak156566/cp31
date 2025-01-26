@@ -1,0 +1,32 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int main() {
+	// your code goes here
+	int t;
+	cin>>t;
+	while(t--){
+	    int n,k;
+	    cin>>n>>k;
+	    vector<pair<int,int>>arr;
+	    
+	    for(int i=0;i<n;i++){
+	        int a;
+	        cin>>a;
+	        if(a%k==0)
+	        cout<<i+1<<" ";
+	        else{
+	            arr.push_back({a%k,-i});
+	        }
+	    }
+	    n=arr.size();
+	    sort(arr.begin(),arr.end());
+	    for(int i=n-1;i>=0;i--){
+	        auto it=arr[i];
+	        cout<<abs(it.second)+1<<" ";
+	    }
+	    cout<<endl;
+	}
+	
+
+}
