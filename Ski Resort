@@ -1,0 +1,45 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int main() {
+	// your code goes here
+	int t;
+	cin>>t;
+	while(t--){
+ int n, k, q;
+        cin >> n >> k >> q;
+ 
+	    
+	   
+        vector<int> a(n);
+        
+        for (int i = 0; i < n; i++) {
+            cin >> a[i];
+        }
+        
+        long long result = 0;
+        int cnt = 0; // To count the length of valid segments
+        
+        for (int i = 0; i < n; i++) {
+            if (a[i] <= q) { 
+                cnt++; // Valid temperature, increase the length of the current valid segment
+            } else {
+                // If temperature exceeds q, process the segment before this
+                if (cnt >= k) {
+                    int l=cnt-k+1;
+                    result += (long long)(l) * (l+1) / 2;
+                }
+                cnt = 0; // Reset the count when an invalid temperature is found
+            }
+        }
+
+                if (cnt >= k) {
+                    int l=cnt-k+1;
+                    result += (long long)(l) * (l+1) / 2;
+                }
+        
+	    cout<<result<<endl;
+	}
+	
+
+}
