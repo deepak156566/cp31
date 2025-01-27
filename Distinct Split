@@ -1,0 +1,30 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int main() {
+	// your code goes here
+	
+    int t;
+    cin>>t;
+    while(t--){
+        int n;
+        cin>>n;
+        string str;
+        cin>>str;
+        unordered_map<char,int>mp1,mp2;
+        for(auto it:str)
+        mp1[it]++;
+        int maxi=INT_MIN;
+        for(auto it:str){
+            mp2[it]++;
+            mp1[it]--;
+            if(mp1[it]==0)
+            mp1.erase(it);
+            int sum=mp1.size()+mp2.size();
+            maxi=max(maxi,sum);
+        }
+        cout<<maxi<<endl;
+        
+    }
+
+}
