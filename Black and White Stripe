@@ -1,0 +1,37 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+void solve() {
+    int n, k;
+    cin >> n >> k;
+    string s;
+    cin >> s;
+
+    int w_count = 0, min_paint = INT_MAX;
+
+    // Count 'W' in the first window of size k
+    for (int i = 0; i < k; i++) {
+        if (s[i] == 'W') w_count++;
+    }
+    
+    min_paint = w_count;
+
+    // Sliding window to check other k-length segments
+    for (int i = k; i < n; i++) {
+        if (s[i] == 'W') w_count++;    // Add new character
+        if (s[i - k] == 'W') w_count--; // Remove old character
+
+        min_paint = min(min_paint, w_count);
+    }
+
+    cout << min_paint << "\n";
+}
+
+int main() {
+    int t;
+    cin >> t;
+    while (t--) {
+        solve();
+    }
+    return 0;
+}
