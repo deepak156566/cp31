@@ -1,0 +1,48 @@
+#include <bits/stdc++.h>
+using namespace std;
+void build(vector<int>&seg,vector<int>&v,int low,int high,int index){
+    if(low==high){
+        seg[index]=v[low];
+        return;
+    }
+    int mid=(low+high)/2;
+    build(seg,v,low,mid,2*index+1);
+    build(seg,v,mid+1,high,2*index+2);
+    seg[index]=seg[2*index+1]+seg[2*index+2];
+}
+void update(vector<int>&seg,vector<int>&v,int low,int high,int index,int point,int value){
+    if(low==high){
+        v[point]=value;
+        seg[index]=value;
+        return;
+    }
+    int mid=(low+high)/2;
+    if(point<=mid){
+        update(seg,v,low,mid,2*index+1,point,value);
+    }
+    else{
+        update(seg,v,mid+1,high,2*index+2,point,value);
+    }
+    seg[index]=seg[2*index+1]+seg[2*index+2];
+}
+int query(vector<int>&seg,int low,int high,int index,int l,int r){
+   if (l <= low && high <= r) return seg[index];
+    else if(r<low || l>high){
+        return 0;
+    }
+    else{
+       int mid=(low+high)/2;
+       int left= query(seg,low,mid,2*index+1,l,r);
+       int right=query(seg,mid+1,high,2*index+2,l,r);
+       return left+right;
+    }
+}
+int main() {
+	// your code goes here
+	int n=5;
+	vector<int>v{1,3,-2,8,-7};
+	vector<int>seg(4*n,0);
+	build(seg,v,0,n-1,0);
+	cout<<"query for index 1...4 is = "<<(query(seg,0,n-1,0,1,4));
+
+}
