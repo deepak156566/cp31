@@ -1,0 +1,82 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+class Info {
+public:
+    int open;
+    int close;
+    int full;
+
+    Info() {
+        open = 0;
+        close = 0;
+        full = 0;
+    }
+};
+
+// Merge two Info nodes
+Info merge(const Info& left, const Info& right) {
+    Info res;
+    int match = min(left.open, right.close);
+    res.full = left.full + right.full + match;
+    res.open = left.open + right.open - match;
+    res.close = left.close + right.close - match;
+    return res;
+}
+
+// Build segment tree
+void build(vector<Info>& seg, const string& s, int low, int high, int index) {
+    if (low == high) {
+        if (s[low] == '(') {
+            seg[index].open = 1;
+        } else {
+            seg[index].close = 1;
+        }
+        return;
+    }
+
+    int mid = (low + high) / 2;
+    build(seg, s, low, mid, 2 * index + 1);
+    build(seg, s, mid + 1, high, 2 * index + 2);
+    seg[index] = merge(seg[2 * index + 1], seg[2 * index + 2]);
+}
+
+// Query segment tree for range [l, r]
+Info query(const vector<Info>& seg, int low, int high, int l, int r, int index) {
+    // No overlap
+    if (r < low || high < l) {
+        return Info();
+    }
+
+    // Total overlap
+    if (l <= low && high <= r) {
+        return seg[index];
+    }
+
+    // Partial overlap
+    int mid = (low + high) / 2;
+    Info left = query(seg, low, mid, l, r, 2 * index + 1);
+    Info right = query(seg, mid + 1, high, l, r, 2 * index + 2);
+    return merge(left, right);
+}
+
+int main() {
+    string s;
+    cin >> s;
+    int n = s.size();
+
+    vector<Info> seg(4 * n);
+    build(seg, s, 0, n - 1, 0);
+
+    int q;
+    cin >> q;
+    while (q--) {
+        int l, r;
+        cin >> l >> r;
+        l--; r--; // 0-based indexing
+        Info result = query(seg, 0, n - 1, l, r, 0);
+        cout << result.full * 2 << endl; // Length of longest valid sequence
+    }
+
+    return 0;
+}
