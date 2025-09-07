@@ -1,0 +1,60 @@
+#include <bits/stdc++.h>
+using namespace std;
+void build(vector<int>&seg,vector<int>&v,int low,int high,int index,int org){
+    if(low==high){
+        seg[index]=v[low];
+        return;
+    }
+    int mid=(low+high)/2;
+    build(seg,v,low,mid,2*index+1,1-org);
+    build(seg,v,mid+1,high,2*index+2,1-org);
+    if(org)
+    seg[index]=seg[2*index+1] | seg[2*index+2];
+    else
+    seg[index]=seg[2*index+1] ^ seg[2*index+2];
+}
+void update(vector<int>&seg,vector<int>&v,int low,int high,int index,int point,int value,int org){
+    if(low==high){
+        v[point]=value;
+        seg[index]=value;
+        return;
+    }
+    int mid=(low+high)/2;
+    if(point<=mid){
+        update(seg,v,low,mid,2*index+1,point,value,1-org);
+    }
+    else{
+        update(seg,v,mid+1,high,2*index+2,point,value,1-org);
+    }
+    if(org)
+    seg[index]=seg[2*index+1] | seg[2*index+2];
+    else
+    seg[index]=seg[2*index+1] ^ seg[2*index+2];
+}
+int main() {
+	// your code goes here
+	int n,q;
+	cin>>n>>q;
+	int m=n;
+	int tot=pow(2,n);
+	n=tot;
+	
+	vector<int>v(n,0);
+	for(int i=0;i<n;i++){
+	    int a;
+	    cin>>a;
+	    v[i]=a;
+	}
+	int org=m%2!=0?1:0;
+	vector<int>seg(4*n,0);
+	build(seg,v,0,n-1,0,org);
+	for(int i=0;i<q;i++){
+	    int point,value;
+	    cin>>point>>value;
+	    update(seg,v,0,n-1,0,point-1,value,org);
+	    cout<<seg[0]<<endl;
+        
+	}
+	
+
+}
